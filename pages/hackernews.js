@@ -1,5 +1,6 @@
 exports.Newspage = class hackernews 
 {
+    // This file and folder to follow POM model
 
     constructor(page)
     {
