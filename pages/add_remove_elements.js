@@ -14,8 +14,8 @@ exports.ElementsPage = class ElementsPage {
 
     async runAddRemoveTest() {
         
-        await expect(this.deleteButtons).toHaveCount(1); // <---- please return to 0
-        
+        await expect(this.deleteButtons).toHaveCount(0); 
+
 
         
         for (let i = 0; i < 7; i++) {
