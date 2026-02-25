@@ -29,7 +29,7 @@ exports.Newspage = class hackernews
         await this.lnew.click()
        // await this.past.click()
         await this.comm.click()
-       // await this.ask.click()
+        await this.ask.click()
         await this.show.click()
         await this.jobs.click()
         await this.sbmit.click()
