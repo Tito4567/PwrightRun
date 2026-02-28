@@ -18,15 +18,15 @@ exports.ElementsPage = class ElementsPage {
 
 
         
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 50; i++) {
             await this.addButton.click();
         }
 
         
-        await expect(this.deleteButtons).toHaveCount(7);
+        await expect(this.deleteButtons).toHaveCount(50);
 
         
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 49; i++) {
             await this.deleteButtons.first().click();
         }
 
