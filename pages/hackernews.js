@@ -11,7 +11,7 @@ exports.Newspage = class hackernews
         this.comm = page.getByRole('link', { name: 'comments', exact: true });
         this.ask = page.getByRole('link', { name: 'ask' });
         this.show = page.getByRole('link', { name: 'show', exact: true });
-        this.jobs = page.getByRole('link', { name: 'jobs' });
+       // this.jobs = page.getByRole('link', { name: 'jobs' });
         this.sbmit = page.getByRole('link', { name: 'submit' });
     }
 
@@ -31,7 +31,7 @@ exports.Newspage = class hackernews
         await this.comm.click()
        // await this.ask.click()
         await this.show.click()
-        await this.jobs.click()
+       // await this.jobs.click()
         await this.sbmit.click()
     }
 }
