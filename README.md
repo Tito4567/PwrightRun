@@ -43,7 +43,7 @@ To address the industry-wide issue of "brittle tests," I am currently architecti
 2.  **Heuristic Analysis:** The framework will utilize a heuristic AI model to scan the DOM tree and compare attributes (text content, proximity, and object ID).
 3.  **Dynamic Recovery:** The system will identify the "most likely" candidate for the element, update the locator in memory, and complete the test execution.
 4.  **Actionable Intelligence:** The system logs the "Healed" locator as a warning, allowing for proactive refactoring without blocking the CI/CD pipeline.
-
+5.  **Reporting:** Reports will be available via website and fashioned via Allure
 
 
 ---
