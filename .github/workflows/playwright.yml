@@ -3,7 +3,13 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '0 8 * * *' # Your 8:00 AM UTC (approx. 3:00 AM/4:00 AM EST) schedule
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   test:
@@ -20,9 +26,34 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test tests/
-    - uses: actions/upload-artifact@v4
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
         path: playwright-report/
         retention-days: 7
+
+  # New job to handle the "Release" and "Deploy" phases
+  deploy:
+    needs: test
+    if: always() # Ensures the report deploys even if tests fail (so you can see why)
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: playwright-report/ # We tell Jekyll to build the site FROM your report folder
+          destination: ./_site
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
