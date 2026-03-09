@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Core Objective
+## 🚀 Core Objectiv
 This framework serves as a **Continuous Testing** engine. Rather than running tests manually on a local machine, this project demonstrates a fully automated, cloud-based pipeline designed for high-frequency feedback in a 2026 DevOps environment.
 
 
