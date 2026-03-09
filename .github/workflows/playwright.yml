@@ -4,30 +4,43 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '0 8 * * *' # Approx. 3:00 AM/4:00 AM EST
 
-# These permissions are mandatory for the "Deploy" phase to succeed
 permissions:
   contents: read
   pages: write
   id-token: write
 
 jobs:
-  test:
+  test-and-deploy:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    
+    # Links this job to your GitHub Pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
         node-version: lts/*
-    - name: Install dependencies
+
+    - name: Install Dependencies
       run: npm install
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
+
+    - name: Run Playwright Tests
       run: npx playwright test tests/
-    - name: Upload Playwright Report
+
+    # --- CI Artifact Storage ---
+    - name: Upload Standard Artifact
       uses: actions/upload-artifact@v4
       if: always()
       with:
@@ -35,24 +48,18 @@ jobs:
         path: playwright-report/
         retention-days: 7
 
-  deploy:
-    # This ensures Deployment only happens after the CI (Test) job finishes
-    needs: test
-    if: always() 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Points to the folder created by the 'test' job
-          path: playwright-report/ 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    # --- CD Deployment to GitHub Pages ---
+    - name: Setup GitHub Pages
+      if: always()
+      uses: actions/configure-pages@v4
+
+    - name: Upload to Pages Server
+      if: always()
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: playwright-report/ 
+
+    - name: Deploy Live Link
+      if: always()
+      id: deployment
+      uses: actions/deploy-pages@v4
