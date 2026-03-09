@@ -1,10 +1,12 @@
 name: Playwright SDET CI/CD
+
 on:
   push:
     branches: [ main, master ]
   schedule:
     - cron: '0 8 * * *'
 
+# These permissions are mandatory for the "Deploy" phase to succeed
 permissions:
   contents: read
   pages: write
@@ -25,7 +27,7 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test tests/
-    - name: Upload Playwright Report Artifact
+    - name: Upload Playwright Report
       uses: actions/upload-artifact@v4
       if: always()
       with:
@@ -34,8 +36,9 @@ jobs:
         retention-days: 7
 
   deploy:
+    # This ensures Deployment only happens after the CI (Test) job finishes
     needs: test
-    if: always()
+    if: always() 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -48,7 +51,7 @@ jobs:
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # This tells GitHub: "Take the Playwright report folder as-is"
+          # Points to the folder created by the 'test' job
           path: playwright-report/ 
       - name: Deploy to GitHub Pages
         id: deployment
