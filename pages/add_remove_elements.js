@@ -34,6 +34,6 @@ exports.ElementsPage = class ElementsPage {
         await expect(this.deleteButtons).toHaveCount(1); 
         await expect(this.deleteButtons).toBeVisible();
 
-        // nothing
+        
     }
 }
