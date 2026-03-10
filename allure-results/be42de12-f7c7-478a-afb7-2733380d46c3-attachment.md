@@ -1,0 +1,66 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - link "Fork me on GitHub":
+      - /url: https://github.com/tourdedave/the-internet
+      - img "Fork me on GitHub" [ref=e5] [cursor=pointer]
+    - generic [ref=e6]:
+      - heading "Add/Remove Elements" [level=3] [ref=e7]
+      - generic [ref=e8]:
+        - button "Add Element" [ref=e9] [cursor=pointer]
+        - separator [ref=e10]
+        - generic [ref=e11]:
+          - button "Delete" [ref=e12] [cursor=pointer]
+          - button "Delete" [ref=e13] [cursor=pointer]
+          - button "Delete" [ref=e14] [cursor=pointer]
+          - button "Delete" [ref=e15] [cursor=pointer]
+          - button "Delete" [ref=e16] [cursor=pointer]
+          - button "Delete" [ref=e17] [cursor=pointer]
+          - button "Delete" [ref=e18] [cursor=pointer]
+          - button "Delete" [ref=e19] [cursor=pointer]
+          - button "Delete" [ref=e20] [cursor=pointer]
+          - button "Delete" [ref=e21] [cursor=pointer]
+          - button "Delete" [ref=e22] [cursor=pointer]
+          - button "Delete" [ref=e23] [cursor=pointer]
+          - button "Delete" [ref=e24] [cursor=pointer]
+          - button "Delete" [ref=e25] [cursor=pointer]
+          - button "Delete" [ref=e26] [cursor=pointer]
+          - button "Delete" [ref=e27] [cursor=pointer]
+          - button "Delete" [ref=e28] [cursor=pointer]
+          - button "Delete" [ref=e29] [cursor=pointer]
+          - button "Delete" [ref=e30] [cursor=pointer]
+          - button "Delete" [ref=e31] [cursor=pointer]
+          - button "Delete" [ref=e32] [cursor=pointer]
+          - button "Delete" [ref=e33] [cursor=pointer]
+          - button "Delete" [ref=e34] [cursor=pointer]
+          - button "Delete" [ref=e35] [cursor=pointer]
+          - button "Delete" [ref=e36] [cursor=pointer]
+          - button "Delete" [ref=e37] [cursor=pointer]
+          - button "Delete" [ref=e38] [cursor=pointer]
+          - button "Delete" [ref=e39] [cursor=pointer]
+          - button "Delete" [ref=e40] [cursor=pointer]
+          - button "Delete" [ref=e41] [cursor=pointer]
+          - button "Delete" [ref=e42] [cursor=pointer]
+          - button "Delete" [ref=e43] [cursor=pointer]
+          - button "Delete" [ref=e44] [cursor=pointer]
+          - button "Delete" [ref=e45] [cursor=pointer]
+          - button "Delete" [ref=e46] [cursor=pointer]
+          - button "Delete" [ref=e47] [cursor=pointer]
+          - button "Delete" [ref=e48] [cursor=pointer]
+          - button "Delete" [ref=e49] [cursor=pointer]
+          - button "Delete" [ref=e50] [cursor=pointer]
+          - button "Delete" [ref=e51] [cursor=pointer]
+          - button "Delete" [ref=e52] [cursor=pointer]
+          - button "Delete" [ref=e53] [cursor=pointer]
+          - button "Delete" [ref=e54] [cursor=pointer]
+          - button "Delete" [ref=e55] [cursor=pointer]
+          - button "Delete" [ref=e56] [cursor=pointer]
+  - generic [ref=e58]:
+    - separator [ref=e59]
+    - generic [ref=e60]:
+      - text: Powered by
+      - link "Elemental Selenium" [ref=e61] [cursor=pointer]:
+        - /url: http://elementalselenium.com/
+```
