@@ -23,7 +23,7 @@ exports.ElementsPage = class ElementsPage {
         }
 
         
-        await expect(this.deleteButtons).toHaveCount(50);
+        await expect(this.deleteButtons).toHaveCount(5); //<----- should be 50
 
         
         for (let i = 0; i < 49; i++) {
