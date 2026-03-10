@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 8 * * *' # Approx. 3:00 AM/4:00 AM EST
+    - cron: '0 8 * * *' 
 
 permissions:
   contents: write
@@ -15,7 +15,7 @@ jobs:
   test-and-deploy:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -36,24 +36,31 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright Tests
-      # Continue even on failure so we can see what failed in the Allure report
       run: npx playwright test tests/
       continue-on-error: true
 
-    # --- ALLURE REPORT GENERATION ---
+    # --- HISTORICAL TREND LOGIC ---
+    
+    # 1. Download the history from the last successful deployment on gh-pages
     - name: Get Allure History
       uses: actions/checkout@v4
       if: always()
       continue-on-error: true
       with:
         ref: gh-pages
-        path: gh-pages
+        path: gh-pages-dir # Download to a sub-folder to avoid overwriting current workspace
 
-    - name: Build Allure Report
+    # 2. Build the report and automatically link the history
+    - name: Allure Report Action
       uses: simple-elf/allure-report-action@master
       if: always()
+      id: allure-report
       with:
         allure_results: allure-results
+        # This points to where we downloaded the old report
+        gh_pages: gh-pages-dir
+        # This is the subfolder inside gh-pages where history lives
+        allure_report: allure-report
         allure_history: allure-history
         keep_reports: 20
 
@@ -66,7 +73,7 @@ jobs:
       if: always()
       uses: actions/upload-pages-artifact@v3
       with:
-        # We upload the generated allure-report, not the standard playwright-report
+        # Important: simple-elf action outputs the final merged report here
         path: allure-report
 
     - name: Deploy Allure Dashboard
