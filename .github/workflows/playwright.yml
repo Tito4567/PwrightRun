@@ -12,71 +12,104 @@ permissions:
   id-token: write
 
 jobs:
-  test-and-deploy:
-    timeout-minutes: 15
+  # --- STAGE 1: BUILD ---
+  # Focus: Preparing the environment and dependencies
+  build:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm' # Speeds up future builds
+
+      - name: Install Dependencies
+        run: npm install
+
+  # --- STAGE 2: TEST ---
+  # Focus: Execution of the Playwright suite
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        run: npx playwright test tests/
+        continue-on-error: true
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 1
+
+  # --- STAGE 3: RELEASE ---
+  # Focus: Generating the Allure Report and merging History
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      - name: Get Allure History from gh-pages
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages-dir
+
+      - name: Build Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages-dir
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Upload Allure Report as Artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+  # --- STAGE 4: DEPLOY ---
+  # Focus: Moving the artifacts to the live server (GitHub Pages)
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-
-    - name: Run Playwright Tests
-      run: npx playwright test tests/
-      continue-on-error: true
-
-    # --- HISTORICAL TREND LOGIC ---
-    
-    # 1. Download the history from the last successful deployment on gh-pages
-    - name: Get Allure History
-      uses: actions/checkout@v4
-      if: always()
-      continue-on-error: true
-      with:
-        ref: gh-pages
-        path: gh-pages-dir # Download to a sub-folder to avoid overwriting current workspace
-
-    # 2. Build the report and automatically link the history
-    - name: Allure Report Action
-      uses: simple-elf/allure-report-action@master
-      if: always()
-      id: allure-report
-      with:
-        allure_results: allure-results
-        # This points to where we downloaded the old report
-        gh_pages: gh-pages-dir
-        # This is the subfolder inside gh-pages where history lives
-        allure_report: allure-report
-        allure_history: allure-history
-        keep_reports: 20
-
-    # --- CD DEPLOYMENT TO GITHUB PAGES ---
-    - name: Setup GitHub Pages
-      if: always()
-      uses: actions/configure-pages@v4
-
-    - name: Upload Allure Artifact to Pages
-      if: always()
-      uses: actions/upload-pages-artifact@v3
-      with:
-        # Important: simple-elf action outputs the final merged report here
-        path: allure-report
-
-    - name: Deploy Allure Dashboard
-      if: always()
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Deploy Allure Dashboard to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
