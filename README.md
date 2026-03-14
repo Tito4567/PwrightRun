@@ -51,7 +51,7 @@ To address the industry-wide issue of "brittle tests," I am currently architecti
 ## 📥 How to Run This Project
 1. **Install Dependencies:** `npm install`
 2. **Run All Tests:** `npx playwright test`
-3. **View Results:** `npx playwright show-report`
+3. **View Results:** `npx allure-commandline serve allure-results`
 
 ---
 
