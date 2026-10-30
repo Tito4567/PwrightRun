@@ -7,4 +7,6 @@ const hacker = new Newspage(page);
 await hacker.thePage();
 await hacker.testHackerNews();
 
+/ Restart/ 
+
 });
